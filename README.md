@@ -24,13 +24,19 @@ help them in their projects or for placements.
 
 # Triggers and Procedures:-
 
-Triggers count =: 5
-Procedures count=: 8
+**Triggers count =: 5**
+
+**Procedures count=: 8**
 
 
-# Features
-** Users can follow each other **
-** users can post **
-** users can send message to each other**
-** comments on post **
-** searching post related to topic **
+# Features of Alumni-Connection-Management-System
+
+**Users can follow each other**
+
+**users can post**
+
+**users can send message to each other**
+
+**comments on post**
+
+**searching post related to topic**
