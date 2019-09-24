@@ -9,7 +9,7 @@ references or insight in a new field. New college students will be initially giv
 student login ID. Access to the system can help them in building connections to
 help them in their projects or for placements.
 
-#Tables used in Project:-
+# Tables used in Project:-
 
 **1:- User Table**
 
