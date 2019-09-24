@@ -1,0 +1,59 @@
+**Post Table**
+
+Creating the Posts table: create table Post 
+( 
+postid number(5) NOT NULL PRIMARY KEY, 
+userid number(5) NOT NULL, 
+text varchar(150) NOT NULL, 
+time timestamp default current_timestamp, 
+Foreign Key(userid) references Users(userid) 
+);
+
+Altering the table: 
+ALTER TABLE Post 
+ADD CONSTRAINT Text_CK CHECK (LENGTHB(text) <= 150); 
+
+
+**Creating the sequence : **
+
+create sequence Post_id_sequence 
+start with 1 
+increment by 1; 
+
+**Trigger for the auto incrementing the primary key: **
+
+CREATE OR REPLACE TRIGGER post_on_adding 
+BEFORE INSERT ON Post 
+FOR EACH ROW  
+BEGIN 
+SELECT Post_id_sequence.nextval 
+INTO :new.postid 
+FROM dual; 
+END; 
+
+
+**Procedure for the adding the post: **
+
+CREATE or REPLACE Procedure insertpost 
+(username in varchar,text in varchar) AS 
+any_rows_found number; 
+useraid number; 
+uid Users.userid%TYPE; 
+BEGIN 
+select userid 
+into useraid 
+from Users 
+where username=uname; 
+select count(*) 
+into any_rows_found 
+from Users 
+where useraid=userid; 
+if any_rows_found <>1 then 
+dbms_output.put_line('You are not connected to the system !!!'); 
+else 
+dbms_output.put_line('Post has been posted on your timeline'); 
+Insert into Post(userid,text) 
+Values(useraid,text); 
+end if; 
+END; 
+/
