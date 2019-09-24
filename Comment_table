@@ -1,0 +1,64 @@
+**Comment table:**
+
+**Creating the table Comment: **
+
+create table Comments( 
+commentid number NOT NULL PRIMARY KEY, 
+uid1 number NOT NULL, 
+uid2 number NOT NULL, 
+pid number NOT NULL, 
+time timestamp default current_timestamp, 
+message varchar2(100), 
+Foreign Key(pid) references Post(postid), 
+Foreign Key(uid1) references Users(userid), 
+Foreign Key(uid2) references Users(userid) 
+); 
+
+**Sequence: **
+
+create sequence comment_id_sequence 
+start with 1 
+increment by 1; 
+
+**Trigger for the auto incrementing the primary key: **
+
+CREATE OR REPLACE TRIGGER on_comment 
+BEFORE INSERT ON Comments 
+FOR EACH ROW 
+BEGIN 
+SELECT comment_id_sequence.nextval 
+INTO :new.commentid 
+FROM dual; 
+END;
+
+**Insertion into the Comments table : **
+
+CREATE or REPLACE Procedure commentadd 
+(username1 in varchar,username2 in varchar,pid in number,texts in varchar2) AS 
+userid1 number; 
+userid2 number; 
+already number; 
+uname Users.uname%TYPE; 
+BEGIN 
+already:=0; 
+select userid 
+into userid2 
+from Users 
+where username2=uname; 
+select count(*) 
+into already 
+from Post 
+where pid=postid; 
+if already=0 then 
+dbms_output.put_line('Post you are providing does not present in the database'); 
+else 
+select userid 
+into userid1 
+from Users 
+where username1=uname; 
+Insert into Comments(uid1,uid2,pid,message) 
+Values(userid1,userid2,pid,texts); 
+dbms_output.put_line('You commented to that post'); 
+end if; 
+END; 
+/ 
