@@ -1,0 +1,56 @@
+**Messages: **
+**Creating the table Messages: **
+
+create table Messages( 
+messageid number NOT NULL PRIMARY KEY, 
+uid1 number NOT NULL, 
+uid2 number NOT NULL, 
+time timestamp default current_timestamp, 
+message varchar2(100), 
+Foreign Key(uid1) references Users(userid), 
+Foreign Key(uid2) references Users(userid) 
+);
+
+**Sequence:**
+
+create sequence message_id_sequence 
+start with 1 
+increment by 1; 
+
+**Trigger for the auto incrementing the primary key: **
+CREATE OR REPLACE TRIGGER on_message 
+BEFORE INSERT ON Messages 
+FOR EACH ROW 
+BEGIN 
+SELECT message_id_sequence.nextval 
+INTO :new.messageid 
+FROM dual; 
+END; 
+
+
+**Insertion into the Messages : **
+
+CREATE or REPLACE Procedure Messageadd 
+(username1 in varchar,username2 in varchar,texts in varchar2) AS 
+userid1 number; 
+userid2 number; 
+already number; 
+uname Users.uname%TYPE; 
+BEGIN 
+userid2:=0; 
+select userid 
+into userid2 
+from Users 
+where username2=uname; 
+if userid2=0 then 
+dbms_output.put_line('Username you are providing does not present in the database'); 
+else 
+select userid 
+into userid1 
+from Users 
+where username1=uname; 
+Insert into Messages(uid1,uid2,message) 
+Values(userid1,userid2,texts); 
+dbms_output.put_line('Message Delivered'); 
+end if; 
+END; 
