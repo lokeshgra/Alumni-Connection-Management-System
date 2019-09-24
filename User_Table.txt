@@ -1,0 +1,71 @@
+**(1)Users table: Creating the table Users for all the basics information related to the Alumni or Student:** 
+
+create table Users 
+( 
+userid number(5) NOT NULL PRIMARY KEY, 
+uname varchar(20) NOT NULL UNIQUE, 
+password varchar(20) NOT NULL , 
+fname varchar(20) NOT NULL, 
+lname varchar(20) NOT NULL, 
+Linkedin varchar(20) NOT NULL, 
+facebook varchar(20) NOT NULL, 
+batch number(5), 
+Workexp varchar2(500) 
+) ;
+
+ 
+Creating the sequence : 
+create sequence Users_id_sequence 
+start with 1; 
+Trigger for the auto incrementing the primary key: 
+CREATE OR REPLACE TRIGGER users_on_signup 
+BEFORE INSERT ON Users 
+FOR EACH ROW 
+BEGIN 
+SELECT Users_id_sequence.nextval 
+INTO :new.userid 
+FROM dual; 
+END;
+
+
+Procedure to Signup in the database: 
+CREATE or REPLACE Procedure insertalumni (username in varchar,pword in varchar,firstname in varchar,lastname in varchar,linked in varchar,fb in varchar 
+,year in number,work in varchar2) AS 
+any_rows_found number; 
+uname Users.uname%TYPE; 
+id users.userid%type; 
+BEGIN 
+select count(*) 
+into any_rows_found 
+from Users 
+where username=uname; 
+if any_rows_found>=1 then 
+dbms_output.put_line('Username already exist in the database!!!'); 
+else 
+Insert into users(uname,password,fname,lname,linkedin,facebook,batch,workexp) 
+Values(username,pword,firstname,lastname,linked,fb,year,work); 
+select userid into id from users where username = uname ; 
+dbms_output.put_line(id); 
+Insert into Follow(uid1,uid2) 
+Values(id,id); 
+end if; 
+END; 
+
+CREATE or REPLACE Procedure login 
+(username in varchar,pword in varchar) AS 
+any_rows_found number; 
+uname Users.uname%TYPE; 
+password Users.password%TYPE; 
+BEGIN 
+select count(*) 
+into any_rows_found 
+from Users 
+where username=uname and password=pword; 
+if any_rows_found <> 1 then 
+dbms_output.put_line('Incorrect Credentials'); 
+else 
+dbms_output.put_line('User is Logged in'); 
+end if; 
+End
+
+
